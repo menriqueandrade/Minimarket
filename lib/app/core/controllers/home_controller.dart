@@ -19,24 +19,24 @@ class HomeController extends GetxController {
     },
     {
       'nombre': 'Registrar cliente',
-      'icono': BootstrapIcons.check2_square,
+      'icono': BootstrapIcons.person_plus_fill,
       'vista': CrearClienteScreen()
     },
     {
       'nombre': 'Consultas de clientes',
-      'icono': BootstrapIcons.check2_square,
+      'icono': BootstrapIcons.search,
       'vista': ListaClienteScreen()
     },
     {
       'nombre': 'Clientes con deudas',
-      'icono': BootstrapIcons.filetype_pdf,
+      'icono': BootstrapIcons.cash_coin,
       'vista': const Scaffold(
         body: Text(''),
       )
     },
     {
       'nombre': 'Clientes paz y salvo',
-      'icono': BootstrapIcons.person,
+      'icono': BootstrapIcons.cash,
       'vista': const Scaffold(
         body: Text(''),
       )

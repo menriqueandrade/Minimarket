@@ -100,7 +100,7 @@ class MenuDrawer extends GetResponsiveView {
                               child: Row(
                                 children: [
                                   Text(
-                                    'Nombre Negocio',
+                                    'Mini Market',
                                     style: TextStyle(color: Colores.rosa),
                                   ),
                                 ],

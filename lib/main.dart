@@ -21,6 +21,7 @@ Future<void> main() async {
   //inicializo negociobackend para simular el backend y poder procesar los datos como si estuviera realizando consultas
  // Get.put(BackendClientesDeudas());
   //Verificar por que el Binding de login control me toca ponerlo aca
+   Get.put(HomeController());
   Get.put(ClientService());
   Get.put(LoginController());
   //esto quita el # que aparece en la barra de busqueda

@@ -20,7 +20,9 @@ import '../../widgets/switch.dart';
 import '../../widgets/titulo.dart';
 
 class LoginScreen extends GetView {
+  
   final LoginController userController = Get.put(LoginController());
+
 
   // const LoginScreen({super.key});
 
@@ -53,6 +55,7 @@ class LoginScreen extends GetView {
 }
 
 class ResponsiveLogin extends GetResponsiveView {
+  
   // final dynamic context;
   ResponsiveLogin(
     LoginController userController, {

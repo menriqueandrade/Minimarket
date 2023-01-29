@@ -17,7 +17,12 @@ class HomeScreen extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveHome();
+    return WillPopScope(
+        onWillPop: () async {
+          // Lógica para evitar que la aplicación se cierre
+          return false;
+        },
+        child: ResponsiveHome());
   }
 }
 
@@ -26,6 +31,7 @@ class ResponsiveHome extends GetResponsiveView {
   HomeController homeController = Get.find();
   LoginController sesionController = Get.find();
   ResponsiveHome({super.key});
+
   @override
   Widget builder() {
     if (screen.isWatch) {
@@ -36,16 +42,18 @@ class ResponsiveHome extends GetResponsiveView {
     }
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
-            child: AppBar(
-              elevation: 0,
-              backgroundColor: Colores.rojo,
-              centerTitle: true,
-              title: Text("Minimarket"),
-              iconTheme: const IconThemeData(
-                  color: Color.fromARGB(255, 255, 255, 255)),
-              actions: menuOpciones(sesionController),
-            )),
+          preferredSize: const Size.fromHeight(50),
+          child: AppBar(
+            elevation: 0,
+            backgroundColor: Colores.rojo,
+            centerTitle: true,
+            title: Text("Minimarket"),
+            iconTheme:
+                const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
+            actions: menuOpciones(sesionController),
+          ),
+        ),
+
         /**
        * muestra las opciones del menu
        * - inicio
@@ -55,6 +63,7 @@ class ResponsiveHome extends GetResponsiveView {
         drawer: MenuDrawer(),
         body: Row(
           children: [
+            
             //muestra el menu lateral solo si es escritorio
             !screen.isDesktop ? Container() : MenuLateral(),
 
@@ -72,7 +81,7 @@ class ResponsiveHome extends GetResponsiveView {
 }
 
 menuOpciones(LoginController loginController) {
- // LoginController loginController = Get.find();
+  // LoginController loginController = Get.find();
   return [
     PopupMenuButton(
       tooltip: 'Opciones',
@@ -85,7 +94,7 @@ menuOpciones(LoginController loginController) {
         const PopupMenuItem(enabled: false, child: Divider()),
         PopupMenuItem(
             onTap: () async {
-             await loginController.cerrarSesion();
+              await loginController.cerrarSesion();
             },
             child: const ListTile(title: Text('Cerrar sesion'))),
       ],
