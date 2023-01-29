@@ -9,4 +9,5 @@ class Colores {
   static const Color negro = Color.fromARGB(255, 0, 0, 0);
   static const Color gris = Color.fromARGB(255, 143, 137, 140);
   static const Color blanco = Color.fromARGB(255, 255, 255, 255);
+  
 }

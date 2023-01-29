@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'app/core/controllers/home_controller.dart';
+import 'app/core/controllers/login_controller.dart';
+import 'app/core/services/client_service.dart';
 import 'app/mainConfigStateManegementApp.dart';
 import 'firebase_options.dart';
 
@@ -17,8 +19,11 @@ Future<void> main() async {
   );
 //await GetStorage.init();
   //inicializo negociobackend para simular el backend y poder procesar los datos como si estuviera realizando consultas
-  Get.put(BackendClientesDeudas());
+ // Get.put(BackendClientesDeudas());
+  //Verificar por que el Binding de login control me toca ponerlo aca
+  Get.put(ClientService());
+  Get.put(LoginController());
   //esto quita el # que aparece en la barra de busqueda
 
-  runApp(const MainConfigStateManagementApp());
+  runApp( const MainConfigStateManagementApp());
 }

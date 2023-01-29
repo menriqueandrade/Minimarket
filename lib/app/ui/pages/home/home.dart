@@ -1,8 +1,11 @@
+import 'package:deudas_minimarket/app/core/controllers/sesion_controller.dart';
+import 'package:deudas_minimarket/app/core/controllers/users/user_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import '../../../core/controllers/home_controller.dart';
+import '../../../core/controllers/login_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../../theme/colores.dart';
 import '../../widgets/error_pantalla.dart';
@@ -19,7 +22,9 @@ class HomeScreen extends GetView {
 }
 
 class ResponsiveHome extends GetResponsiveView {
+  final _isLoggedIn = Get.put(false);
   HomeController homeController = Get.find();
+  LoginController sesionController = Get.find();
   ResponsiveHome({super.key});
   @override
   Widget builder() {
@@ -37,8 +42,9 @@ class ResponsiveHome extends GetResponsiveView {
               backgroundColor: Colores.rojo,
               centerTitle: true,
               title: Text("Minimarket"),
-              iconTheme: const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
-              actions: menuOpciones(),
+              iconTheme: const IconThemeData(
+                  color: Color.fromARGB(255, 255, 255, 255)),
+              actions: menuOpciones(sesionController),
             )),
         /**
        * muestra las opciones del menu
@@ -51,7 +57,7 @@ class ResponsiveHome extends GetResponsiveView {
           children: [
             //muestra el menu lateral solo si es escritorio
             !screen.isDesktop ? Container() : MenuLateral(),
-  
+
             //muestra el contrnido del item seleccionado
             //el contenido de la lista es cargado con los elementos de la lista definida en home controller vistas
             Expanded(
@@ -64,37 +70,33 @@ class ResponsiveHome extends GetResponsiveView {
         ));
   }
 }
-menuOpciones(){
-   HomeController homeController = Get.find();
-    return [
-      PopupMenuButton(
-        tooltip: 'Opciones',
-        initialValue: null,
-        itemBuilder: (BuildContext context) => [
-          PopupMenuItem(
-            onTap: (){},
-            child: const ListTile(title: Text('Perfil'))
-          ),
-          PopupMenuItem(
-            onTap: (){},
-            child: const ListTile(title: Text('Opciones'))
-          ),
-          const PopupMenuItem(
-            enabled: false, 
-            child: Divider()
-          ),
-          PopupMenuItem(
-             onTap: ()async{
-              await homeController.cerrarSesion();
+
+menuOpciones(LoginController loginController) {
+ // LoginController loginController = Get.find();
+  return [
+    PopupMenuButton(
+      tooltip: 'Opciones',
+      initialValue: null,
+      itemBuilder: (BuildContext context) => [
+        PopupMenuItem(
+            onTap: () {}, child: const ListTile(title: Text('Perfil'))),
+        PopupMenuItem(
+            onTap: () {}, child: const ListTile(title: Text('Opciones'))),
+        const PopupMenuItem(enabled: false, child: Divider()),
+        PopupMenuItem(
+            onTap: () async {
+             await loginController.cerrarSesion();
             },
-            child: const ListTile(title: Text('Cerrar sesion'))
-          ),
-        ],
-        child: const CircleAvatar(
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          backgroundImage: NetworkImage('https://img.freepik.com/foto-gratis/retrato-joven-rubio-mujer_273609-12060.jpg?w=2000'),
-        ),
+            child: const ListTile(title: Text('Cerrar sesion'))),
+      ],
+      child: const CircleAvatar(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundImage: NetworkImage(
+            'https://png.pngtree.com/thumb_back/fw800/background/20210222/pngtree-line-business-orange-background-image_564081.jpg'),
       ),
-      const SizedBox(width: 10,)
-    ];
-  }
+    ),
+    const SizedBox(
+      width: 10,
+    )
+  ];
+}
