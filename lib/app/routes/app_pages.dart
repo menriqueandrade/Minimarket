@@ -6,6 +6,7 @@ import '../core/bindings/client/register_binding.dart';
 import '../core/bindings/home_binding.dart';
 import '../core/bindings/users/users_binding.dart';
 import '../ui/pages/client/client_create.dart';
+import '../ui/pages/client/client_deudas_details.dart';
 import '../ui/pages/client/client_list.dart';
 import '../ui/pages/home/home.dart';
 import '../ui/pages/home/login.dart';
@@ -39,6 +40,18 @@ class AppPages {
     GetPage(
       name: Routes.LISTACLIENTE,
       page: () => ListaClienteScreen(),
+      transition: Transition.downToUp,
+      binding: RegisterClientBinding(),
+    ),
+    GetPage(
+      name: Routes.LISTACLIENTE,
+      page: () => ListaClienteScreen(),
+      transition: Transition.downToUp,
+      binding: RegisterClientBinding(),
+    ),
+    GetPage(
+      name: Routes.DETALLESCLIENTE,
+      page: () => ClienteDetailScreen(),
       transition: Transition.downToUp,
       binding: RegisterClientBinding(),
     ),

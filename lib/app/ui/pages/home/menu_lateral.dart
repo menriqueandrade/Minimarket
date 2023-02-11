@@ -84,9 +84,10 @@ class MenuDrawer extends GetResponsiveView {
                       child: Container(
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                              image: NetworkImage(
-                                  'https://d7lju56vlbdri.cloudfront.net/var/ezwebin_site/storage/images/_aliases/img_1col/noticias/solar-orbiter-toma-imagenes-del-sol-como-nunca-antes/9437612-1-esl-MX/Solar-Orbiter-toma-imagenes-del-Sol-como-nunca-antes.jpg'),
-                              fit: BoxFit.cover),
+                              image: AssetImage(
+                                Imagenes.logo,
+                              ),
+                              fit: BoxFit.fill),
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                         height: 200,
@@ -98,10 +99,14 @@ class MenuDrawer extends GetResponsiveView {
                               color: Color.fromARGB(255, 255, 255, 255),
                               padding: EdgeInsets.all(10),
                               child: Row(
-                                children: [
+                                children: const [
                                   Text(
                                     'Mini Market',
-                                    style: TextStyle(color: Colores.rosa),
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 0, 0, 0),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -121,9 +126,9 @@ class MenuDrawer extends GetResponsiveView {
                             // : homeController.vistas.length -1,
                             (index) => ListTile(
                                   selected: homeController.vista.value == index,
-                                  selectedColor: Colores.rojo,
-                                  textColor: Colores.rojo,
-                                  iconColor: Colores.rojo,
+                                  selectedColor: Color.fromARGB(255, 0, 0, 0),
+                                  textColor: Color.fromARGB(255, 0, 0, 0),
+                                  iconColor: Color.fromARGB(255, 0, 0, 0),
                                   leading: Icon(
                                       homeController.vistas[index]['icono']),
                                   title: Text(
@@ -143,10 +148,10 @@ class MenuDrawer extends GetResponsiveView {
             bottom: 10,
             left: 10,
             // child: TituloWidget()
-            child: Image.network(
-              "https://d7lju56vlbdri.cloudfront.net/var/ezwebin_site/storage/images/_aliases/img_1col/noticias/solar-orbiter-toma-imagenes-del-sol-como-nunca-antes/9437612-1-esl-MX/Solar-Orbiter-toma-imagenes-del-Sol-como-nunca-antes.jpg",
-              height: 40,
-            )),
+            child: Image.asset(
+              Imagenes.logo,
+              height: 80,
+            ))
       ],
     );
   }

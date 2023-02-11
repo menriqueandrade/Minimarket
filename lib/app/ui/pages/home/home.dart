@@ -47,7 +47,11 @@ class ResponsiveHome extends GetResponsiveView {
             elevation: 0,
             backgroundColor: Colores.rojo,
             centerTitle: true,
-            title: Text("Minimarket"),
+            title: const Text("Minimarket",
+                style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
             iconTheme:
                 const IconThemeData(color: Color.fromARGB(255, 255, 255, 255)),
             actions: menuOpciones(sesionController),
@@ -63,7 +67,6 @@ class ResponsiveHome extends GetResponsiveView {
         drawer: MenuDrawer(),
         body: Row(
           children: [
-            
             //muestra el menu lateral solo si es escritorio
             !screen.isDesktop ? Container() : MenuLateral(),
 
@@ -84,26 +87,26 @@ menuOpciones(LoginController loginController) {
   // LoginController loginController = Get.find();
   return [
     PopupMenuButton(
-      tooltip: 'Opciones',
-      initialValue: null,
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem(
-            onTap: () {}, child: const ListTile(title: Text('Perfil'))),
-        PopupMenuItem(
-            onTap: () {}, child: const ListTile(title: Text('Opciones'))),
-        const PopupMenuItem(enabled: false, child: Divider()),
-        PopupMenuItem(
-            onTap: () async {
-              await loginController.cerrarSesion();
-            },
-            child: const ListTile(title: Text('Cerrar sesion'))),
-      ],
-      child: const CircleAvatar(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        backgroundImage: NetworkImage(
-            'https://png.pngtree.com/thumb_back/fw800/background/20210222/pngtree-line-business-orange-background-image_564081.jpg'),
-      ),
-    ),
+        tooltip: 'Opciones',
+        initialValue: null,
+        itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                  onTap: () {}, child: const ListTile(title: Text('Perfil'))),
+              PopupMenuItem(
+                  onTap: () {}, child: const ListTile(title: Text('Opciones'))),
+              const PopupMenuItem(enabled: false, child: Divider()),
+              PopupMenuItem(
+                  onTap: () async {
+                    await loginController.cerrarSesion();
+                  },
+                  child: const ListTile(title: Text('Cerrar sesion'))),
+            ],
+        child: const CircleAvatar(
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundImage: AssetImage(
+            'assets/logo.png',
+          ),
+        )),
     const SizedBox(
       width: 10,
     )

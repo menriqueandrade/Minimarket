@@ -23,6 +23,11 @@ class HomeController extends GetxController {
       'vista': CrearClienteScreen()
     },
     {
+      'nombre': 'Pago de Cliente',
+      'icono': BootstrapIcons.cash_stack,
+      'vista': CrearClienteScreen()
+    },
+    {
       'nombre': 'Consultas de clientes',
       'icono': BootstrapIcons.search,
       'vista': ListaClienteScreen()

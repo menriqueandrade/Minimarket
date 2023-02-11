@@ -47,7 +47,7 @@ class LoginController extends GetxController {
   Future<void> keepSessionOpen() async {
     // Tu lógica para mantener la sesión abierta
     // Por ejemplo, si estás usando Firebase Auth, podrías hacer algo así:
-    User user = await FirebaseAuth.instance.currentUser!;
+    User? user = await FirebaseAuth.instance.currentUser!;
     if (user != null) {
       // Si el usuario ya ha iniciado sesión, refresca el token
       await user.getIdToken();

@@ -40,7 +40,7 @@ class CrearClienteScreen extends GetView {
                                 style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colores.rojo),
+                                    color: Color.fromARGB(255, 0, 0, 0)),
                               ),
                               const SizedBox(
                                 height: 20,
@@ -80,6 +80,11 @@ class CrearClienteScreen extends GetView {
                                 height: 20,
                               ),
                               ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colores.rojo),
+                                ),
                                 onPressed: () {
                                   //agregar un cliente
 
@@ -87,7 +92,8 @@ class CrearClienteScreen extends GetView {
                                       nombreCliente: nombreController.text,
                                       cedulaCliente: cedulaController.text,
                                       telefonoCliente: telefonoController.text,
-                                      direccionCliente: direccionController.text,
+                                      direccionCliente:
+                                          direccionController.text,
                                       cargoCliente: cargoController.text,
                                       correoCliente: correoController.text);
 

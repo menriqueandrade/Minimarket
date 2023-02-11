@@ -20,9 +20,7 @@ import '../../widgets/switch.dart';
 import '../../widgets/titulo.dart';
 
 class LoginScreen extends GetView {
-  
   final LoginController userController = Get.put(LoginController());
-
 
   // const LoginScreen({super.key});
 
@@ -35,8 +33,8 @@ class LoginScreen extends GetView {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: <Color>[
-                  Color.fromARGB(255, 255, 102, 0),
-                  Color.fromARGB(255, 255, 102, 0),
+                  Color.fromARGB(255, 255, 0, 0),
+                  Color.fromARGB(255, 255, 0, 0),
                 ],
                 tileMode:
                     TileMode.repeated, // repeats the gradient over the canvas
@@ -55,7 +53,6 @@ class LoginScreen extends GetView {
 }
 
 class ResponsiveLogin extends GetResponsiveView {
-  
   // final dynamic context;
   ResponsiveLogin(
     LoginController userController, {
@@ -235,12 +232,8 @@ class ResponsiveLogin extends GetResponsiveView {
                               const SizedBox(
                                 height: 10,
                               ),
-                              SwitchPersonalizado(
-                                  texto: 'Mantener sesion iniciada',
-                                  estado: true,
-                                  onChanged: (v) {}),
                               const SizedBox(
-                                height: 10,
+                                height: 40,
                               ),
                               Row(
                                 children: [

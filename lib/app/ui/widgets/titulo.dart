@@ -19,7 +19,7 @@ class TituloWidget extends StatelessWidget {
       text: TextSpan(
         style: const TextStyle(
             fontFamily: Fuentes.ztgraftonThin,
-            color: Colores.negro),
+            color: Color.fromARGB(255, 198, 143, 143)),
         children: <TextSpan>[
           TextSpan(
             text: titulo_minimarket.substring(0, 3),
@@ -27,7 +27,7 @@ class TituloWidget extends StatelessWidget {
                 fontFamily: Fuentes.ztgraftonBold,
                 fontWeight: FontWeight.bold,
                 fontSize: fontSize,
-                color: Colores.rosa),
+                color: Color.fromARGB(255, 254, 2, 2)),
           ),
           TextSpan(
             text: titulo_minimarket.substring(3, titulo_minimarket.length),

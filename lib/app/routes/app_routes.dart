@@ -6,7 +6,7 @@ abstract class Routes{
   static const REGISTRO = '/registro';
   static const CREARCLIENTE = '/crearcliente';
   static const LISTACLIENTE = '/listacliente';
-  
+  static const DETALLESCLIENTE = '/listacliente';
   //static const SEDE = '/sede';
  // static const REESTABLECER = '/reestablecer';
 }
