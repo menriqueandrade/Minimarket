@@ -1,10 +1,12 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:deudas_minimarket/app/ui/pages/client/client_create.dart';
+import 'package:deudas_minimarket/app/ui/pages/client/client_pago.dart';
 import 'package:deudas_minimarket/app/ui/pages/home/login.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../data/repository/token_repository.dart';
+import '../../ui/pages/client/client_abono.dart';
 import '../../ui/pages/client/client_list.dart';
 
 class HomeController extends GetxController {
@@ -25,7 +27,12 @@ class HomeController extends GetxController {
     {
       'nombre': 'Pago de Cliente',
       'icono': BootstrapIcons.cash_stack,
-      'vista': CrearClienteScreen()
+      'vista': PagoClienteScreen()
+    },
+    {
+      'nombre': 'Abono de cliente',
+      'icono': BootstrapIcons.cash_stack,
+      'vista': AbonoClienteScreen()
     },
     {
       'nombre': 'Consultas de clientes',

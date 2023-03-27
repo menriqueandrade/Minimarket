@@ -17,7 +17,7 @@ class CrearClienteScreen extends GetView {
   @override
   Widget build(BuildContext context) {
     Get.put(ClientController());
-    final ClientController _clientController = Get.find<ClientController>();
+
     return GetBuilder<ClientController>(
       init: ClientController(),
       builder: ((controller) {

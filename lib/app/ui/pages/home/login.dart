@@ -262,6 +262,33 @@ class ResponsiveLogin extends GetResponsiveView {
                                   )),
                                 ],
                               ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Boton(
+                                    color: Colores.rojo,
+                                    accion: () {
+                                      String? emailLogin = txtCorreo
+                                          .controlador.text
+                                          .toString()
+                                          .trim();
+                                      String? contrasenaLogin = txtClave
+                                          .controlador.text
+                                          .toString()
+                                          .trim();
+
+                                      loginController
+                                          .signInWithGoogle(
+                                              );
+                                    },
+                                    child: const Text(
+                                      'Iniciar Sesion',
+                                      style: TextStyle(color: Colores.blanco),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )),
+                                ],
+                              ),
                               const SizedBox(
                                 height: 10,
                               ),

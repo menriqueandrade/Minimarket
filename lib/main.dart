@@ -1,3 +1,4 @@
+import 'package:deudas_minimarket/app/ui/pages/client/client_abono.dart';
 import 'package:deudas_minimarket/simulacionbackend/backend_clientesdeudas.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'app/core/controllers/home_controller.dart';
 import 'app/core/controllers/login_controller.dart';
 import 'app/core/services/client_service.dart';
 import 'app/mainConfigStateManegementApp.dart';
+import 'app/ui/pages/client/client_pago.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -24,6 +26,10 @@ Future<void> main() async {
    Get.put(HomeController());
   Get.put(ClientService());
   Get.put(LoginController());
+  Get.put(PagoClienteScreen());
+  Get.put(AbonoClienteScreen());
+  
+  
   //esto quita el # que aparece en la barra de busqueda
 
   runApp( const MainConfigStateManagementApp());

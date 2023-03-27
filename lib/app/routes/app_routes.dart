@@ -7,6 +7,9 @@ abstract class Routes{
   static const CREARCLIENTE = '/crearcliente';
   static const LISTACLIENTE = '/listacliente';
   static const DETALLESCLIENTE = '/listacliente';
+  static const PAGOCLIENTE = '/pagocliente';
+  static const ABONOCLIENTE = '/abonocliente';
+
   //static const SEDE = '/sede';
  // static const REESTABLECER = '/reestablecer';
 }

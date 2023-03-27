@@ -2,12 +2,15 @@ import 'package:deudas_minimarket/app/core/bindings/login_binding.dart';
 import 'package:deudas_minimarket/app/ui/pages/home/register.dart';
 import 'package:get/get.dart';
 
+import '../core/bindings/client/pagocliente_binding.dart';
 import '../core/bindings/client/register_binding.dart';
 import '../core/bindings/home_binding.dart';
 import '../core/bindings/users/users_binding.dart';
+import '../ui/pages/client/client_abono.dart';
 import '../ui/pages/client/client_create.dart';
 import '../ui/pages/client/client_deudas_details.dart';
 import '../ui/pages/client/client_list.dart';
+import '../ui/pages/client/client_pago.dart';
 import '../ui/pages/home/home.dart';
 import '../ui/pages/home/login.dart';
 
@@ -30,7 +33,6 @@ class AppPages {
         page: () => const RegisterScreen(),
         transition: Transition.fadeIn,
         binding: UserBinding()),
-        
     GetPage(
       name: Routes.CREARCLIENTE,
       page: () => CrearClienteScreen(),
@@ -55,5 +57,19 @@ class AppPages {
       transition: Transition.downToUp,
       binding: RegisterClientBinding(),
     ),
+    GetPage(
+      name: Routes.PAGOCLIENTE,
+      page: () => PagoClienteScreen(),
+      transition: Transition.downToUp,
+      binding: PagoClienteBinding(),
+    ),
+    GetPage(
+      name: Routes.ABONOCLIENTE,
+      page: () => AbonoClienteScreen(),
+      transition: Transition.downToUp,
+      binding: PagoClienteBinding(),
+    ),
+
+    
   ];
 }
