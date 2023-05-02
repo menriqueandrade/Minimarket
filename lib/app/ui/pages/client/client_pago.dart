@@ -16,8 +16,13 @@ class PagoClienteScreen extends GetView<ClientController> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Text("Pago Total"),
-
+            Text(
+              "Pago total del cliente",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TextField(
               onChanged: (value) => clientController.filterClient(value),
               decoration: const InputDecoration(
@@ -32,15 +37,7 @@ class PagoClienteScreen extends GetView<ClientController> {
               child: Obx(
                 () => ListView.builder(
                   itemCount: clientController.clienteObservable.value.length,
-                  itemBuilder: (context, index) => ListTile(
-
-                      //  title: Text(
-                      //    clientController.clienteObservable.value[index]?.nombreCliente ?? '',
-                      //    style:
-                      //        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //  ),
-
-                      ),
+                  itemBuilder: (context, index) => ListTile(),
                 ),
               ),
             ),

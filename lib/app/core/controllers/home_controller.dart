@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../data/repository/token_repository.dart';
 import '../../ui/pages/client/client_abono.dart';
+import '../../ui/pages/client/client_chart.dart';
 import '../../ui/pages/client/client_list.dart';
 
 class HomeController extends GetxController {
@@ -25,7 +26,7 @@ class HomeController extends GetxController {
       'vista': CrearClienteScreen()
     },
     {
-      'nombre': 'Pago de Cliente',
+      'nombre': 'Pago total Cliente',
       'icono': BootstrapIcons.cash_stack,
       'vista': PagoClienteScreen()
     },
@@ -42,9 +43,7 @@ class HomeController extends GetxController {
     {
       'nombre': 'Clientes con deudas',
       'icono': BootstrapIcons.cash_coin,
-      'vista': const Scaffold(
-        body: Text(''),
-      )
+      'vista': ChartScreen()
     },
     {
       'nombre': 'Clientes paz y salvo',

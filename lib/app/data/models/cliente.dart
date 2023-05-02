@@ -8,11 +8,13 @@ class Cliente {
   String? direccionCliente;
   String? cargoCliente;
   String? correoCliente;
+  double? banderatotal;
 //  String? fechaPago;
   double? saldoDeuda;
   double? totalDeuda;
   Timestamp? fechaCreacion;
   Timestamp? fechaPago;
+  Timestamp? fechaAbono;
   Cliente({
     this.id,
     this.nombreCliente,
@@ -25,6 +27,8 @@ class Cliente {
     this.saldoDeuda,
     this.totalDeuda,
     this.fechaCreacion,
+    this.fechaAbono,
+    this.banderatotal,
   });
   factory Cliente.fromJson(Map<String, dynamic> json) => Cliente(
         nombreCliente: json['nombreCliente'],
@@ -37,10 +41,14 @@ class Cliente {
         saldoDeuda: json['saldoDeuda'] is double
             ? json['saldoDeuda']
             : (json['saldoDeuda'] as num).toDouble(),
+        banderatotal: json['banderatotal'] is double
+            ? json['banderatotal']
+            : (json['banderatotal'] as num).toDouble(),
         totalDeuda: json['totalDeuda'] is double
             ? json['totalDeuda']
             : (json['totalDeuda'] as num).toDouble(),
         fechaCreacion: json['fechaCreacion'],
+        fechaAbono: json['fechaAbono'],
         id: json['id'],
       );
 
@@ -55,7 +63,9 @@ class Cliente {
         "saldoDeuda": saldoDeuda,
         "totalDeuda": totalDeuda,
         "fechaCreacion": fechaCreacion,
+        "fechaAbono": fechaAbono,
         "id": id,
+        "banderatotal" : banderatotal,
       };
   final CollectionReference _collection =
       FirebaseFirestore.instance.collection('clientes');

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../widgets/error_pantalla.dart';
 import 'client_deudas_details.dart';
+import 'package:intl/intl.dart';
 
 class ListaClienteScreen extends GetResponsiveView {
   @override
@@ -21,19 +22,22 @@ class ListaClienteScreen extends GetResponsiveView {
     return GetX<ClientController>(
       init: ClientController(),
       builder: (clientController) {
+        var valor = clientController.clienteObservable.length;
+
         return Scaffold(
-          // appBar: AppBar(
-          //   title: Column(
-          //     children: [
-          //       TextField(
-          //         decoration: InputDecoration(hintText: "BUSCAR"),
-          //       )
-          //     ],
-          //   ),
-          //   centerTitle: true,
-          //   backgroundColor: Colors.transparent,
-          //   elevation: 0,
-          // ),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            automaticallyImplyLeading: false,
+            title: Column(
+              children: [
+                Text(
+                  "Total de Clientes: $valor",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
           body: clientController.clienteObservable.isEmpty
               ? const Center(child: CircularProgressIndicator())
               : Rows(),
@@ -44,7 +48,10 @@ class ListaClienteScreen extends GetResponsiveView {
 }
 
 class Rows extends GetView {
+  var formatter =
+      NumberFormat.currency(locale: 'es_CO', symbol: 'COP', decimalDigits: 0);
   ClientController clientController = Get.put(ClientController());
+  
   Rows({
     Key? key,
   }) : super(key: key);
@@ -73,12 +80,12 @@ class Rows extends GetView {
                   subtitle: Text(clientController
                           .clienteObservable[index]!.cedulaCliente ??
                       'Esta vacio'),
+                  // Text('Ultima deuda del pedido: ${formatter.format(saldoDeuda ?? 0) }',
                   trailing: Text(
-                      "Total Deuda: ${clientController.clienteObservable[index]!.totalDeuda}"),
+                      "Total Deuda: ${formatter.format(clientController.clienteObservable[index]!.totalDeuda)}"),
                 ),
               ),
             ),
-            //  Text(Get.find<ClientController>().docRef.id),
           ],
         );
       },

@@ -16,7 +16,13 @@ class AbonoClienteScreen extends GetView<ClientController> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Text("Abonar"),
+            Text(
+              "Abono al total del cliente",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TextField(
               onChanged: (value) => clientController.filterClientAbono(value),
               decoration: const InputDecoration(

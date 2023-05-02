@@ -9,8 +9,11 @@ import '../../../routes/app_pages.dart';
 import '../../theme/colores.dart';
 import '../home/home.dart';
 import 'client_list.dart';
+import 'package:intl/intl.dart';
 
 class ClienteDetailScreen extends GetView {
+  var formatter =
+      NumberFormat.currency(locale: 'es_CO', symbol: 'COP', decimalDigits: 0);
   LoginController sesionController = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -54,16 +57,15 @@ class ClienteDetailScreen extends GetView {
                                   children: [
                                     Card(
                                       child: ListTile(
-                                        onTap: () {},
-                                        title: Text(
-                                            clientedetail.nombreCliente ??
-                                                'Esta vacio'),
-                                        subtitle: Text(
-                                            clientedetail.cedulaCliente ??
-                                                'Esta vacio'),
-                                        trailing: Text(
-                                            'Total de deuda ${clientedetail.totalDeuda?.toString() ?? 0} '),
-                                      ),
+                                          onTap: () {},
+                                          title: Text(
+                                              clientedetail.nombreCliente ??
+                                                  'Esta vacio'),
+                                          subtitle: Text(
+                                              clientedetail.cedulaCliente ??
+                                                  'Esta vacio'),
+                                          trailing: Text(
+                                              'Total de deuda ${formatter.format(clientedetail.totalDeuda ?? 0)}')),
                                     ),
                                     // Text(
                                     //     'Esta es el id de este  ${clientedetail.id} '),
@@ -84,10 +86,11 @@ class ClienteDetailScreen extends GetView {
                                                   clientedetail
                                                       .direccionCliente,
                                                   formatDate(clientedetail
-                                                      .fechaCreacion!)),
+                                                      .fechaCreacion!),
+                                                      formatDate(clientedetail.fechaAbono!),
+                                                      ),
                                               _CardBody(
                                                   clientedetail.cedulaCliente),
-                                             
                                             ],
                                           )),
                                     ),
@@ -106,11 +109,14 @@ class ClienteDetailScreen extends GetView {
 }
 
 class _CardHeader extends GetView {
+  var formatter =
+      NumberFormat.currency(locale: 'es_CO', symbol: 'COP', decimalDigits: 0);
   final double? saldoDeuda;
   final String? telefono;
   final String? correo;
   final String? direccion;
   final String? fechaUltimoPago;
+  final String? fechaAbono;
 
   _CardHeader(
     this.saldoDeuda,
@@ -118,6 +124,7 @@ class _CardHeader extends GetView {
     this.correo,
     this.direccion,
     this.fechaUltimoPago,
+    this.fechaAbono,
   );
   @override
   Widget build(BuildContext context) {
@@ -155,7 +162,15 @@ class _CardHeader extends GetView {
             const SizedBox(
               height: 15,
             ),
-            Text('Ultima deuda del pedido: ${saldoDeuda?.toString() ?? 0}',
+            Text('Fecha ultimo abono: ${fechaAbono?.toString()}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                )),
+            const SizedBox(
+              height: 15,
+            ),
+            Text(
+                'Ultima deuda del pedido: ${formatter.format(saldoDeuda ?? 0)}',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -200,7 +215,7 @@ class _CardBody extends GetView {
     return Column(children: [
       GetBuilder<ClientController>(builder: (clienteDetailController) {
         Cliente clientedetail = clienteDetailController.clientedetail;
-        
+
         return Column(
           children: [
             TextFormField(
@@ -217,20 +232,19 @@ class _CardBody extends GetView {
                 //   Get.snackbar("Error", "Ingrese un valor valido a pagar");
                 // } else if (saldoDeudaController.text.isNotEmpty) {
                 final saldoDeuda = double.tryParse(saldoDeudaController.text);
-                
 
                 final Cliente cliente = Cliente(
                   saldoDeuda: saldoDeuda,
                   totalDeuda: clientedetail.totalDeuda,
                 );
-                clientController.agregarSaldo(cliente.saldoDeuda!, idCedula!,cliente.totalDeuda!);
+                clientController.agregarSaldo(
+                    cliente.saldoDeuda!, idCedula!, cliente.totalDeuda!,);
 
                 Get.back();
                 //   }
               },
-              child: const Text("Pagar"),
+              child: const Text("Agregar valor pedido"),
             ),
-            
           ],
         );
       }),

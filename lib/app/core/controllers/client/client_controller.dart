@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:deudas_minimarket/app/ui/widgets/input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,8 +9,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../ui/pages/client/client_deudas_details.dart';
 import '../../services/client_service.dart';
+import 'package:intl/intl.dart';
 
 class ClientController extends GetxController {
+  var formatter =
+      NumberFormat.currency(locale: 'es_CO', symbol: 'COP', decimalDigits: 0);
   TextEditingController abonoController = TextEditingController();
   // final List<Map<String, dynamic>> AllClients = <Cliente?>[].obs as List<Map<String, dynamic>>;
   final List<Map<String, dynamic>> allPlayers = [
@@ -53,11 +58,11 @@ class ClientController extends GetxController {
     final String? uid = currentUser.uid;
     print(currentUser);
     print(email);
-    //  final DocumentReference idDocumento = FirebaseFirestore.instance.collection("clientes").doc(cedulaCliente);
+  
     CollectionReference clientes =
         FirebaseFirestore.instance.collection('clientes');
 
-    // Call the user's CollectionReference to add a new user
+   
     await clientes
         .add({
           'id': id,
@@ -78,7 +83,7 @@ class ClientController extends GetxController {
   }
 
   Future<void> agregarSaldoDeuda(String saldoDeuda, String idDocumento) async {
-    //aca obtengo el usuario y toda su info
+    
     try {
       final User? currentUser = await _auth.currentUser;
       final String? email = currentUser!.email;
@@ -87,43 +92,27 @@ class ClientController extends GetxController {
 
       final DocumentReference documentReference =
           FirebaseFirestore.instance.collection("clientes").doc(idDocumento);
-      // Call the user's CollectionReference to add a new user
+     
       await documentReference.update({
         'saldoDeuda': saldoDeuda,
-        // Stokes and Sons
+  
       });
     } catch (e) {
       Get.snackbar("title", e.toString());
     }
-    // .then((value) => Get.snackbar("title", "Deuda agregada con exito"))
-    // .catchError((error) => print("Failed to add user: $error"));
+  
   }
 
-  //consultar cedula cliente
-  // Future<void> consultarCedulaCliente(String cedulaCliente) async {
-  //   CollectionReference clientes =
-  //       FirebaseFirestore.instance.collection('clientes');
-  //   clientes
-  //       .where('cedulaCliente', isEqualTo: cedulaCliente)
-  //       .get()
-  //       .then((QuerySnapshot querySnapshot) {
-  //     querySnapshot.docs.forEach((doc) {
-  //       print(doc.data());
-  //       print(doc.id);
-  //       print(doc.exists);
-  //     });
-  //   });
-  // }
+ 
 
-  //Obtener la coleccion clientes de cloud firestore
+ 
   Future<void> obtenerClientes() async {
     CollectionReference clientes =
         FirebaseFirestore.instance.collection('clientes');
     clientes.snapshots().listen((event) {
       clienteObservable.clear();
       event.docs.forEach((element) {
-        //consultar cedulas
-        //  print(element.data()['cedulaCliente']);
+       
 
         clienteObservable
             .add(Cliente.fromJson(element.data() as Map<String, dynamic>));
@@ -136,8 +125,8 @@ class ClientController extends GetxController {
     totalDeuda = saldoDeuda + totalDeuda;
     print(totalDeuda);
     querySnapshot.docs.first.reference.update({'totalDeuda': totalDeuda});
-    //  saldoDeuda = 0;
-    //   querySnapshot.docs.first.reference.update({'saldoDeuda': saldoDeuda});
+
+
   }
 
   Future<void> agregarSaldo(
@@ -150,19 +139,63 @@ class ClientController extends GetxController {
         .then((querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         querySnapshot.docs.first.reference.update({'saldoDeuda': saldoDeuda});
-        // el saldoDeuda agregarlo en el campo de totalDeuda
-
+       
         querySnapshot.docs.first.reference
             .update({'fechaCreacion': DateTime.now()});
 
-        sumarValorTotal(saldoDeuda, totalDeuda, querySnapshot);
-        // Se ha encontrado un documento con el campo coincidente
-        //updatedValue = querySnapshot.docs.first.data()[querySnapshot.docs.first.data().keys.firstWhere((element) => element == 'id')];
+    
+        FirebaseFirestore.instance
+            .collection('fechas')
+            .doc('OHuO3FTWJfKdcmELZXae')
+            .get()
+            .then((DocumentSnapshot documentSnapshot) async {
+          if (documentSnapshot.exists) {
+            Map<String, dynamic> data =
+                documentSnapshot.data() as Map<String, dynamic>;
+            Map<String, dynamic> mesMap = data['mes'];
+
+            var mes = DateTime.now().month.toString();
+            if (mesMap['5']['nombremes'] == mes) {
+             
+            
+                   sumarValorTotal(saldoDeuda, totalDeuda, querySnapshot);
+              double totalVentasMes = await consultarTotalMes();
+            
+              mesMap['5']['totalmes'] = totalVentasMes;
+              documentSnapshot.reference.update({'mes': mesMap});
+
+           
+            }
+
+          
+          } else {
+            print('El documento no existe');
+          }
+        });
+
       } else if (querySnapshot.docs.isEmpty) {
         // No se ha encontrado ningún documento con el campo coincidente
         updatedValue = "null";
       }
     });
+  }
+
+  Future<double> consultarTotalMes() async {
+  double total = 0;
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('clientes')
+      .get();
+
+  querySnapshot.docs.forEach((doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    if (data.containsKey('totalDeuda')) {
+      double totalDeuda = data['totalDeuda'] as double;
+      total += totalDeuda;
+    }
+  });
+
+  print('El total de deuda es: $total');
+  return total;
   }
 
   //Metodo para filtrar cedula y mostrarlo en la vista
@@ -229,93 +262,88 @@ class ClientController extends GetxController {
             context: Get.context!,
             builder: (_) => AlertDialog(
               title: Text("Cliente encontrado"),
-              content: Column(
-                children: [
-                  Obx(
-                    () => ListTile(
-                      onTap: () {
-                        Get.find<ClientController>()
-                            .setClient(clienteObservable[index]!);
-                        Get.to(ClienteDetailScreen());
-                      },
-                      title: Text(
-                          "${clienteObservable.value[index]?.nombreCliente}"),
-                      subtitle: Text(
-                          "${clienteObservable.value[index]?.cedulaCliente}"),
-                      trailing: Text("Total deuda "
-                          "${clienteObservable.value[index]?.totalDeuda}"),
+              content: Container(
+                width: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(
+                      () => ListTile(
+                        onTap: () {
+                          Get.find<ClientController>()
+                              .setClient(clienteObservable[index]!);
+                          Get.to(ClienteDetailScreen());
+                        },
+                        title: Container(
+                          width: double.infinity,
+                          child: Text(
+                              "${clienteObservable.value[index]?.nombreCliente}",
+                              softWrap: false),
+                        ),
+                        subtitle: Text(
+                            "${clienteObservable.value[index]?.cedulaCliente}"),
+                        trailing: Text("Deuda: "
+                            "${formatter.format(clienteObservable.value[index]?.totalDeuda)}"),
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                      //si doy tap mostrar warning
+                    ElevatedButton(
+                        //si doy tap mostrar warning
 
-                      onPressed: () {
-                        if (clienteObservable.value[index]?.saldoDeuda == 0 ||
-                            clienteObservable.value[index]?.totalDeuda == 0) {
-                          Get.snackbar(
-                              "Error", "El cliente no tiene saldo deuda");
-                        } else {
-                          showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('¿Está seguro?'),
-                                content: Text(
-                                    '¿Está seguro de realizar esta acción?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Get.back(),
-                                    child: Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Realizar acción deseada aquí
-                                      pagarTodo(
-                                          clienteObservable
-                                                  .value[index]?.saldoDeuda ??
-                                              0,
-                                          clienteObservable.value[index]
-                                                  ?.cedulaCliente ??
-                                              "",
-                                          clienteObservable
-                                                  .value[index]?.totalDeuda ??
-                                              0);
-                                      Get.back();
-                                    },
-                                    child: Text('Aceptar'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                      child: Text("Pagar Todo"))
-                ],
+                        onPressed: () {
+                          if (clienteObservable.value[index]?.saldoDeuda == 0 ||
+                              clienteObservable.value[index]?.totalDeuda == 0) {
+                            Get.snackbar(
+                                "Error", "El cliente no tiene saldo deuda");
+                          } else {
+                            showDialog(
+                              context: Get.context!,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('¿Está seguro?'),
+                                  content: Text(
+                                      '¿Está seguro de realizar esta acción?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Get.back(),
+                                      child: Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Realizar acción deseada aquí
+                                        pagarTodo(
+                                            clienteObservable
+                                                    .value[index]?.saldoDeuda ??
+                                                0,
+                                            clienteObservable.value[index]
+                                                    ?.cedulaCliente ??
+                                                "",
+                                            clienteObservable
+                                                    .value[index]?.totalDeuda ??
+                                                0);
+                                        Get.back();
+                                      },
+                                      child: Text('Aceptar'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: Text("Pagar Todo"))
+                  ],
+                ),
               ),
             ),
           );
         }
       }
 
-      //mostrar resultado
-
-      //si la clienteobservable cedula es igual a cedula
-      //    FirebaseFirestore.instance
-      //     .collection('clientes')
-      //     .where('cedulaCliente', isEqualTo: cedula)
-      //     .get()
-      //     .then((querySnapshot) {
-      //   if (querySnapshot.docs.isNotEmpty) {
-      //  print("si existe");
-      //   } else if (querySnapshot.docs.isEmpty) {
-      //     // No se ha encontrado ningún documento con el campo coincidente
-      //     print("no existe");
-      //   }
-      //   });
+      
     }
   }
-   Future<void> filterClientAbono(String cedula) async {
+
+  Future<void> filterClientAbono(String cedula) async {
     if (cedula.isEmpty) {
       print("No pasa nada");
     } else {
@@ -330,117 +358,119 @@ class ClientController extends GetxController {
           showDialog(
             context: Get.context!,
             builder: (_) => AlertDialog(
-              title: Text("Cliente encontrado"),
-              content: Column(
-                children: [
-                  Obx(
-                    () => ListTile(
-                      onTap: () {
-                        Get.find<ClientController>()
-                            .setClient(clienteObservable[index]!);
-                        Get.to(ClienteDetailScreen());
-                      },
-                      title: Text(
-                          "${clienteObservable.value[index]?.nombreCliente}"),
-                      subtitle: Text(
-                          "${clienteObservable.value[index]?.cedulaCliente}"),
-                      trailing: Text("Total deuda "
-                          "${clienteObservable.value[index]?.totalDeuda}"),
+              title: Text("Abono de cliente"),
+              content: Container(
+                width: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Obx(
+                      () => ListTile(
+                        onTap: () {
+                          Get.find<ClientController>()
+                              .setClient(clienteObservable[index]!);
+                          Get.to(ClienteDetailScreen());
+                        },
+                        title: Container(
+                          width: double.infinity,
+                          child: Text(
+                              "${clienteObservable.value[index]?.nombreCliente}",
+                              softWrap: false),
+                        ),
+                        subtitle: Text(
+                            "${clienteObservable.value[index]?.cedulaCliente}"),
+                        trailing: Text("Deuda: "
+                            "${formatter.format(clienteObservable.value[index]?.totalDeuda)}"),
+                      ),
                     ),
-                  ),
-               TextFormField(
-                    controller: abonoController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: "Abono",
-                      hintText: "Abono",
-                      border: OutlineInputBorder(),
+                    TextFormField(
+                      controller: abonoController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Abono",
+                        hintText: "Abono",
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  ),
-            
-                  ElevatedButton(
-                      //si doy tap mostrar warning
+                    ElevatedButton(
+                        //si doy tap mostrar warning
 
-                      onPressed: () {
-                        if (clienteObservable.value[index]?.saldoDeuda == 0 ||
-                            clienteObservable.value[index]?.totalDeuda == 0) {
-                          Get.snackbar(
-                              "Error", "El cliente no tiene saldo deuda");
-                        } else {
-                          
-
-
-                          showDialog(
-                            context: Get.context!,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('¿Está seguro?'),
-                                content: Text(
-                                    '¿Está seguro de realizar esta acción?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Get.back(),
-                                    child: Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      // Realizar acción deseada aquí
-                                      abonoValorTotal(
+                        onPressed: () {
+                          if (clienteObservable.value[index]?.saldoDeuda == 0 ||
+                              clienteObservable.value[index]?.totalDeuda == 0) {
+                            Get.snackbar(
+                                "Error", "El cliente no tiene saldo deuda");
+                          } else {
+                            showDialog(
+                              context: Get.context!,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('¿Está seguro?'),
+                                  content: Text(
+                                      '¿Está seguro de realizar esta acción?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Get.back(),
+                                      child: Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Realizar acción deseada aquí
+                                        abonoValorTotal(
                                           clienteObservable
                                                   .value[index]?.saldoDeuda ??
                                               0,
-                                          (clienteObservable.value[index]
-                                                  ?.cedulaCliente ??
-                                              "") as double,
-                                          (clienteObservable
+                                          clienteObservable
                                                   .value[index]?.totalDeuda ??
-                                              0) as QuerySnapshot<Object?>);
-                                      Get.back();
-                                    },
-                                    child: Text('Aceptar'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                      child: Text("Abonar"))
-                ],
+                                              0,
+                                          double.parse(abonoController.text),
+                                          clienteObservable.value[index]
+                                                  ?.cedulaCliente ??
+                                              "",
+                                        );
+                                        Get.back();
+                                      },
+                                      child: Text('Aceptar'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: Text("Abonar"))
+                  ],
+                ),
               ),
             ),
           );
         }
-        
       }
-      
 
-      //mostrar resultado
-
-      //si la clienteobservable cedula es igual a cedula
-      //    FirebaseFirestore.instance
-      //     .collection('clientes')
-      //     .where('cedulaCliente', isEqualTo: cedula)
-      //     .get()
-      //     .then((querySnapshot) {
-      //   if (querySnapshot.docs.isNotEmpty) {
-      //  print("si existe");
-      //   } else if (querySnapshot.docs.isEmpty) {
-      //     // No se ha encontrado ningún documento con el campo coincidente
-      //     print("no existe");
-      //   }
-      //   });
+    
     }
   }
-  Future<void> abonoValorTotal(
-      double saldoDeuda, double totalDeuda, QuerySnapshot querySnapshot) async {
-    totalDeuda = saldoDeuda - totalDeuda;
-    print(totalDeuda);
-    querySnapshot.docs.first.reference.update({'totalDeuda': totalDeuda});
-    //  saldoDeuda = 0;
-    //   querySnapshot.docs.first.reference.update({'saldoDeuda': saldoDeuda});
-  }
 
+  Future<void> abonoValorTotal(double saldoDeuda, double totalDeuda,
+      double abonoController, String cedulaCliente) async {
+    totalDeuda = totalDeuda - abonoController;
+    print(totalDeuda);
+    FirebaseFirestore.instance
+        .collection('clientes')
+        .where('cedulaCliente', isEqualTo: cedulaCliente)
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isNotEmpty) {
+        querySnapshot.docs.first.reference.update({'totalDeuda': totalDeuda});
+        print("COÑO SE PAGO ABONO");
+        // el saldoDeuda agregarlo en el campo de totalDeuda
+        Get.back();
+
+        querySnapshot.docs.first.reference
+            .update({'fechaAbono': DateTime.now()});
+      } else if (querySnapshot.docs.isEmpty) {}
+    });
+  }
 
   Future<void> pagarTodo(
       double saldoDeuda, String idCedula, double totalDeuda) async {
@@ -451,24 +481,22 @@ class ClientController extends GetxController {
         .get()
         .then((querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
-        querySnapshot.docs.first.reference.update({'saldoDeuda': saldoDeuda});
-        querySnapshot.docs.first.reference.update({'totalDeuda': totalDeuda});
+        querySnapshot.docs.first.reference.update({'saldoDeuda': 0});
+        querySnapshot.docs.first.reference.update({'totalDeuda': 0});
         print("COÑO SE PAGO TODO");
         // el saldoDeuda agregarlo en el campo de totalDeuda
 
         querySnapshot.docs.first.reference
             .update({'fechaCreacion': DateTime.now()});
 
-
-        // Se ha encontrado un documento con el campo coincidente
-        //updatedValue = querySnapshot.docs.first.data()[querySnapshot.docs.first.data().keys.firstWhere((element) => element == 'id')];
+       
       } else if (querySnapshot.docs.isEmpty) {
         // No se ha encontrado ningún documento con el campo coincidente
         updatedValue = "null";
       }
     });
   }
-  
+
   //Metodo para filtrar por cedula
 
   //filtrar por cedula
